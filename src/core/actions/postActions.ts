@@ -3,8 +3,16 @@ import { postActions } from "core/feature/posts/postsSlice";
 
 const getPostsData = () => async (dispatch: any) => {
   try {
-    postActions.fetchPostsLoading();
+    dispatch(postActions.fetchPostsLoading());
 
-    const posts = axios.get("");
-  } catch (error) {}
+    const posts = await axios.get<any[]>(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+
+    dispatch(postActions.fetchPostsSuccess(posts.data));
+  } catch (error: any) {
+    dispatch(postActions.fetchPostsError(error.message));
+  }
 };
+
+export { getPostsData };
